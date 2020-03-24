@@ -1,5 +1,6 @@
 from data_plotter import plotFitDataForCountry, plotRealData
-from data_loader import load_data
+from data_loader import load_data, clean_data, readDataForCountry
+from data_sir import solveSIRModel
 
 
 def plotFitData(countries, csvFile, fileFormat, dataType, plot, nprev, ndiscard, verbose):
@@ -7,7 +8,12 @@ def plotFitData(countries, csvFile, fileFormat, dataType, plot, nprev, ndiscard,
         plotFitDataForCountry(countryName, csvFile, fileFormat, dataType, plot, nprev, ndiscard, verbose)
 
 
-
+def plotSIRModelForData(countries, csvFile, initVal):
+    data = load_data(csvFile)
+    cases, useless  = clean_data(data, cumsum=True)
+    for country in countries:
+        casesCountry = readDataForCountry(cases, country)
+        solveSIRModel(country, casesCountry, initVal)
 
 
 if __name__ == "__main__":
@@ -40,5 +46,8 @@ if __name__ == "__main__":
         plotRealData(countries, options.csvFile, options.format, options.ndiscard, options.dataType)
     elif options.fit:
         plotFitData(countries, options.csvFile, options.format, options.dataType, options.plot, options.nprev, options.ndiscard, options.verbose)
+    elif options.sir:
+        initialValues = [eval(v) for v in options.init.split(",")]
+        plotSIRModelForData(countries, options.csvFile, initialValues)
     else:
         raise ValueError("Choose something to do!!!")
