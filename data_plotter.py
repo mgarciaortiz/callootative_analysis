@@ -1,4 +1,7 @@
 import matplotlib.pyplot as plt
+import pandas as pd
+import numpy as np
+from datetime import datetime
 from data_fit import  logisticFunction, exponentFunction, computeLogisticFitForCountry
 from data_loader import getXYDataForCountry
 
@@ -29,12 +32,16 @@ def preparePlot(x, y, sol, logisticFit, errors, expFit=None):
     plt.xlabel("Days since 1st January 2020")
     plt.ylabel("Number of infected persons")
     plt.grid()
+    plt.xticks(rotation=90)
     # plt.show()
     return plt
 
 
 def plotFitDataForCountry(countryName, fileName, fileFormat, plot, nprev, ndiscard, verbose):
     x, y = getXYDataForCountry(countryName, fileName, fileFormat, ndiscard)
+    FMT = '%d/%m/%Y'
+    # x = map(lambda x: (datetime.strptime((datetime.strftime(pd.to_datetime(x), FMT)), FMT) - datetime.strptime("01/01/2020", FMT)).days, x)
+    x = list(map(lambda x: (pd.to_datetime(x) - datetime.strptime("01/01/2020", FMT)).days, x))
     fit, sol, errors, expFit = computeLogisticFitForCountry(countryName, x, y, verbose)
 
     if plot:
@@ -53,9 +60,9 @@ def plotFitDataForCountry(countryName, fileName, fileFormat, plot, nprev, ndisca
         plt.show()
 
 
-def plotRealData(countries, csvFile, fileFormat):
+def plotRealData(countries, csvFile, fileFormat, discard):
     for countryName in countries:
-        x, y = getXYDataForCountry(countryName, csvFile, fileFormat)
+        x, y = getXYDataForCountry(countryName, csvFile, fileFormat, discard)
         plt.rcParams['figure.figsize'] = [10, 10]
         plt.rc('font', size=14)
         plt.plot(x, y, linewidth=3, label="{}".format(countryName))
@@ -63,4 +70,5 @@ def plotRealData(countries, csvFile, fileFormat):
     plt.xlabel("Days since 1st January 2020")
     plt.ylabel("Number of infected persons")
     plt.grid()
+    plt.xticks(rotation=90)
     plt.show()

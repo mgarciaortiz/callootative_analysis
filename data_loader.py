@@ -60,20 +60,7 @@ def getDataFrame(fileName):
 
 
 def readDataForCountry(df, country):
-
-    df = df[df.Country.str.match('%s' % country, case=False)]
-    # if country == "EU":
-    #     df = df[df.EU.str.match('EU', case=False)]
-    #     print(df)
-    #     exit()
-    # print(df)
-
-    df = df.loc[:, ['DateRep', 'Cases']]
-    df = df[::-1]
-    date = df['DateRep']
-    df['DateRep'] = date.map(lambda x: (datetime.strptime(x, FMT) - datetime.strptime("01/01/2020", FMT)).days)
-    new_cases = df['Cases']
-    df['Cases'] = new_cases.cumsum(axis=0)
+    df = df['%s' % country]
     # print(df)
     if df.empty:
         raise ValueError(">>>>> readDataForCountry: Problem with reading data for %s!" % country)
@@ -102,9 +89,8 @@ def readDataForCountryFormatTwo(country, fileName="new_cases.csv"):
 
 def getXYDataForCountry(countryName, fileName, fileFormat, ndiscard):
     if fileFormat == 1:
-        df = readDataForCountry(countryName, fileName)
-        dateName = 'DateRep'
-        lastDate = toDate(int(df[dateName].iloc[-1]))
+        df = readDataForCountry(df, countryName)
+        lastDate = df.index[-1]
     elif fileFormat == 2:
         df = readDataForCountryFormatTwo(countryName, fileName)
         dateName = 'date'
@@ -112,7 +98,7 @@ def getXYDataForCountry(countryName, fileName, fileFormat, ndiscard):
     else:
         raise ValueError(">>>>> getXYDataForCountry: Unknown file format!")
 
-    x = list(df.iloc[ndiscard:, 0])
-    y = list(df.iloc[ndiscard:, 1])
+    x = df.index[ndiscard:]
+    y = df.values[ndiscard:]
 
     return x, y
