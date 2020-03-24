@@ -30,15 +30,14 @@ def preparePlot(x, y, sol, logisticFit, errors, expFit=None):
         plt.plot(x + pred_x, [exponentFunction(i, expFit[0][0], expFit[0][1], expFit[0][2]) for i in x + pred_x], label="Exponential" )
     plt.legend()
     plt.xlabel("Days since 1st January 2020")
-    plt.ylabel("Number of infected persons")
     plt.grid()
     plt.xticks(rotation=90)
     # plt.show()
     return plt
 
 
-def plotFitDataForCountry(countryName, fileName, fileFormat, plot, nprev, ndiscard, verbose):
-    x, y = getXYDataForCountry(countryName, fileName, fileFormat, ndiscard)
+def plotFitDataForCountry(countryName, fileName, fileFormat, dataType, plot, nprev, ndiscard, verbose):
+    x, y = getXYDataForCountry(countryName, fileName, fileFormat, ndiscard, dataType)
     FMT = '%d/%m/%Y'
     # x = map(lambda x: (datetime.strptime((datetime.strftime(pd.to_datetime(x), FMT)), FMT) - datetime.strptime("01/01/2020", FMT)).days, x)
     x = list(map(lambda x: (pd.to_datetime(x) - datetime.strptime("01/01/2020", FMT)).days, x))
@@ -57,18 +56,19 @@ def plotFitDataForCountry(countryName, fileName, fileFormat, plot, nprev, ndisca
                              label=label)
                     plt.legend()
 
+        plt.ylabel(f"Number of {dataType}")
         plt.show()
 
 
-def plotRealData(countries, csvFile, fileFormat, discard):
+def plotRealData(countries, csvFile, fileFormat, discard, dataType):
     for countryName in countries:
-        x, y = getXYDataForCountry(countryName, csvFile, fileFormat, discard)
+        x, y = getXYDataForCountry(countryName, csvFile, fileFormat, discard, dataType)
         plt.rcParams['figure.figsize'] = [10, 10]
         plt.rc('font', size=14)
         plt.plot(x, y, linewidth=3, label="{}".format(countryName))
     plt.legend()
-    plt.xlabel("Days since 1st January 2020")
-    plt.ylabel("Number of infected persons")
+    plt.xlabel("Date")
+    plt.ylabel(f"Number of {dataType}")
     plt.grid()
     plt.xticks(rotation=90)
     plt.show()

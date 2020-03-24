@@ -87,7 +87,16 @@ def readDataForCountryFormatTwo(country, fileName="new_cases.csv"):
     return df
 
 
-def getXYDataForCountry(countryName, fileName, fileFormat, ndiscard):
+def getXYDataForCountry(countryName, fileName, fileFormat, ndiscard, dataType):
+    data = load_data(fileName)
+    cases, deaths = clean_data(data, cumsum=True)
+    if dataType == 'Cases':
+        df = cases
+    elif dataType == 'Deaths':
+        df = deaths
+    else:
+        raise ValueError("Unknown data type")
+
     if fileFormat == 1:
         df = readDataForCountry(df, countryName)
         lastDate = df.index[-1]

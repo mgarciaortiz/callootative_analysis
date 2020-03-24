@@ -1,9 +1,11 @@
 from data_plotter import plotFitDataForCountry, plotRealData
 from data_loader import load_data
 
-def plotFitData(countries, csvFile, fileFormat, plot, nprev, ndiscard, verbose):
+
+def plotFitData(countries, csvFile, fileFormat, dataType, plot, nprev, ndiscard, verbose):
     for countryName in countries:
-        plotFitDataForCountry(countryName, csvFile, fileFormat, plot, nprev, ndiscard, verbose)
+        plotFitDataForCountry(countryName, csvFile, fileFormat, dataType, plot, nprev, ndiscard, verbose)
+
 
 
 
@@ -35,8 +37,8 @@ if __name__ == "__main__":
         countries = ["France", "Italy", "Spain", "Germany", "Portugal", "United_States_of_America", "United_Kingdom", "China", "Japan", "South_Korea", "Iran"]
 
     if options.real:
-        plotRealData(countries, options.csvFile, options.format, options.ndiscard)
+        plotRealData(countries, options.csvFile, options.format, options.ndiscard, options.dataType)
     elif options.fit:
-        plotFitData(countries, options.csvFile, options.format, options.plot, options.nprev, options.ndiscard, options.verbose)
+        plotFitData(countries, options.csvFile, options.format, options.dataType, options.plot, options.nprev, options.ndiscard, options.verbose)
     else:
         raise ValueError("Choose something to do!!!")
