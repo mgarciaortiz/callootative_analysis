@@ -32,7 +32,7 @@ if __name__ == "__main__":
     if options.country:
         countries = options.country.split(",")
     else:
-        countries = ["France", "Italy", "Spain", "Germany", "Portugal", "United_States", "United_Kingdom", "China", "Japan", "South_Korea", "Iran"]
+        countries = ["France", "Italy", "Spain", "Germany", "Portugal", "United_States_of_America", "United_Kingdom", "China", "Japan", "South_Korea", "Iran"]
 
     if options.real:
         plotRealData(countries, options.csvFile, options.format)
