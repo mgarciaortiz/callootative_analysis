@@ -10,7 +10,7 @@ def load_data(fileName):
     # Open file inependently of where your project is located
     __location__ = os.path.realpath( os.path.join(os.getcwd(), os.path.dirname(__file__)))
     fileName = os.path.join(__location__, fileName)
-    df = pd.read_csv(fileName)
+    df = pd.read_csv(fileName, engine="python")
 
     return df
 
