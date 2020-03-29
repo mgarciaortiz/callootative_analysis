@@ -63,11 +63,15 @@ def plotFitDataForCountry(countryName, fileName, fileFormat, dataType, plot, npr
 def plotRealData(countries, csvFile, fileFormat, discard, dataType):
     for countryName in countries:
         x, y = getXYDataForCountry(countryName, csvFile, fileFormat, discard, dataType)
+        index = np.argmax(np.array(y) > 0)
+        x = x[index:]
+        y = y[index:]
+        x = [(x[i]-x[0]).days for i in range(len(x))]
         plt.rcParams['figure.figsize'] = [10, 10]
         plt.rc('font', size=14)
         plt.plot(x, y, linewidth=3, label="{}".format(countryName))
     plt.legend()
-    plt.xlabel("Date")
+    plt.xlabel("Number of days since first cases")
     plt.ylabel(f"Number of {dataType}")
     plt.grid()
     plt.xticks(rotation=90)
