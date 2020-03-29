@@ -19,23 +19,23 @@ def load_data(fileName):
 def clean_data(df, cumsum = False):
 
     # Create a new dataframe with all dates
-    dates = df['DateRep'].map(lambda x: (datetime.strptime(x, FMT)))
+    dates = df['dateRep'].map(lambda x: (datetime.strptime(x, FMT)))
     date_min = min(dates)
     date_max = max(dates)
     data_cases = pd.DataFrame(index=pd.date_range(date_min, date_max))
     data_deaths = pd.DataFrame(index=pd.date_range(date_min, date_max))
 
     # fill the dataframe with data from each country
-    countries = set(df['Country'])
+    countries = set(df['countriesAndTerritories'])
     for country in countries:
-        df_country = df[df['Country'] == country]
-        df_country.index = df_country['DateRep'].map(lambda x: (datetime.strptime(x, FMT)))
+        df_country = df[df['countriesAndTerritories'] == country]
+        df_country.index = df_country['dateRep'].map(lambda x: (datetime.strptime(x, FMT)))
 
-        data_cases = data_cases.join(df_country['Cases'], how='outer')
-        data_cases.rename(columns={'Cases': country}, inplace=True)
+        data_cases = data_cases.join(df_country['cases'], how='outer')
+        data_cases.rename(columns={'cases': country}, inplace=True)
 
-        data_deaths = data_deaths.join(df_country['Deaths'], how='outer')
-        data_deaths.rename(columns={'Deaths': country}, inplace=True)
+        data_deaths = data_deaths.join(df_country['deaths'], how='outer')
+        data_deaths.rename(columns={'deaths': country}, inplace=True)
 
     data_deaths = data_deaths.drop_duplicates().fillna(0)
     data_cases = data_cases.drop_duplicates().fillna(0)
@@ -90,9 +90,9 @@ def readDataForCountryFormatTwo(country, fileName="new_cases.csv"):
 def getXYDataForCountry(countryName, fileName, fileFormat, ndiscard, dataType):
     data = load_data(fileName)
     cases, deaths = clean_data(data, cumsum=True)
-    if dataType == 'Cases':
+    if dataType == 'cases':
         df = cases
-    elif dataType == 'Deaths':
+    elif dataType == 'deaths':
         df = deaths
     else:
         raise ValueError("Unknown data type")
